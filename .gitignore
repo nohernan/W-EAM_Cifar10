@@ -6,7 +6,7 @@ data
 nohup.out
 **/*.npy
 **/model*/
-**/*.py
+*/**/*.py
 **/images/test*/
 **/images/memories*/
 **/images/dream*/
