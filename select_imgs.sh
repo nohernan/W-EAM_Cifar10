@@ -35,7 +35,7 @@
 ##
 domain='1024'
 msz='16'
-fixed_sgm='0.035'
+fixed_sgm='0.04'
 ##
 runs_dir="runs-${domain}"
 imag_dir="${runs_dir}/images"
@@ -79,26 +79,26 @@ class_noised_matrix=("dog deer - - - - - -"
 "airplane airplane airplane airplane airplane airplane truck airplane"
 "frog frog frog frog frog frog frog frog")
 ##
-dream_matrix=("dog dog dog deer frog frog frog frog"
-"auto auto auto auto auto truck - -"
-"cat cat cat truck frog frog frog frog"
-"deer deer frog deer frog frog frog frog"
-"bird bird deer frog frog frog deer frog"
-"ship ship ship ship frog frog ship ship"
-"truck truck truck truck truck truck truck truck"
-"horse horse deer deer deer horse frog horse"
-"airplane airplane deer airplane airplane airplane airplane airplane"
-"frog frog frog frog frog frog - -" )
+dream_matrix=("dog dog frog frog frog frog frog frog"
+"auto auto auto truck truck truck - -"
+"cat cat truck truck truck truck truck truck"
+"deer deer deer frog frog frog frog frog"
+"bird bird frog frog frog frog frog frog"
+"ship ship ship frog deer deer ship ship"
+"truck truck truck truck truck frog truck frog"
+"horse horse deer deer deer deer deer frog"
+"airplane airplane airplane deer airplane airplane airplane airplane"
+"frog frog frog frog frog frog frog -")
 ##
 dream_noised_matrix=("dog deer - - - - - -"
-"auto auto auto frog - - - -"
+"auto auto truck truck truck - - -"
 "cat truck truck truck truck truck truck truck"
-"deer deer frog frog deer dog dog dog"
-"bird deer frog deer deer frog frog frog"
-"ship frog frog deer frog deer deer dog"
-"truck truck truck truck frog truck truck truck"
-"horse horse frog frog deer frog frog cat"
-"airplane airplane airplane airplane airplane airplane airplane airplane"
+"deer deer frog frog frog frog frog dog"
+"bird deer frog frog frog frog frog frog"
+"ship frog frog frog frog truck airplane -"
+"truck truck truck truck truck frog frog frog"
+"horse horse deer cat cat dog cat deer"
+"airplane airplane airplane airplane airplane airplane deer horse"
 "frog frog frog frog frog frog frog frog")
 ##
 
@@ -252,7 +252,7 @@ for i in `cat $pair_fn`; do
 	dream_imgs+=${text_filename}
 	#
 	dream_noised_imgs+="${dream_noised_dir}_$(printf "%03d" $dph)/${dig_fn}-memory-fld_${fold_fn}.png "
-	cp ${dream_noised_dir}_$(printf "%03d" $dph)/${dig_fn}-memory-fld_${fold_fn}.png $random_dir_dph
+	cp ${dream_noised_dir}_$(printf "%03d" $dph)/${dig_fn}-memory-fld_${fold_fn}.png "${random_dir_dph}/${dig_fn}-memory-fld_${fold_fn}_noised.png"
 	text_filename="${random_dir_tmp}/class_text_dream_noised_${fold}${dph_idx}.png "
 	convert -background white -size 32x11 -pointsize 9 -gravity center label:${rowdata_dream_noised[dph_idx]} ${text_filename}
 	dream_noised_imgs+=${text_filename}

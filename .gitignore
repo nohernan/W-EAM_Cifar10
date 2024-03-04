@@ -1,6 +1,7 @@
 __pycache__/
 test/
 tmp/
+results/
 .vscode/
 data
 nohup.out
