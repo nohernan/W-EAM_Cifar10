@@ -2,7 +2,7 @@
 
 This repository contains the procedures to replicate the experiments presented in the paper:
 
-&nbsp;&nbsp;&nbsp;No\'e Hern\'andez, Rafael Morales & Luis A. Pineda (under review). _Entropic Associative Memory on real world images_.
+&nbsp;&nbsp;&nbsp;Noé Hernández, Rafael Morales & Luis A. Pineda (under review). _Entropic Associative Memory on real world images_.
 
 The retrieved images are available in the folder [runs-1024/images/chosen-images-grid](https://github.com/nohernan/W-EAM_Cifar10/blob/main/runs-1024/images/chosen-images-grid)
 
@@ -16,11 +16,20 @@ To clone the Anaconda environment [weam_cifar10.yml](https://github.com/nohernan
 
 ### Use
 
-The script ``run_first.sh`` trains the autoencoder and classifier, obtains the features of the data in the corpus and runs experiment 1 of the paper for the different memory sizes (64, 128, 256, 512 and 1024). Each execution saves data in the corresponding ``runs`` folder; for example, ``runs-1024``, such that the values of the ``iota``, ``kappa``, ``xi``, and ``sigma`` parameters have to be set beforehand in the file ``mem_params.csv`` within each ``runs`` folder.
+The script ``run_first.sh`` trains the autoencoder and classifier, obtains the features of all data and runs experiment 1 of the paper for the memory sizes: 64, 128, 256, 512 and 1024. Each execution saves output files in the corresponding ``runs`` folder; for example, ``runs-1024``, such that ``mem_params.csv`` with the values of the ``iota``, ``kappa``, ``xi``, and ``sigma`` parameters exists in each ``runs`` folder before the respective execution.
 
-The code in ``mcols_stdev.py`` computes the mean and standard deviation of the precision, recall and entropy values of the memories for all number of columns and rows, which we analyse to determine the optimal memory size.
+The code in ``mcols_stdev.py`` computes the mean and standard deviation of the precision, the recall and the entropy values of the memories for all number of columns and rows according to experiment 1. We analyse such values to determine the optimal memory size.
 
-In order to run the reamining experiments, we need to classify the noisy test data and choose from the Test Corpus images of each class that are correctly classified. The files ``noised_classif.py`` and ``choose.py`` accomplished these tasks, respectivelty, provided the selected memory size. The output of ``choose.py`` is ``chosen.csv`` with the images id contituing the grid shown in Figs. 8-11 of the paper, also ``chosen.csv`` must be saved within the ``runs`` folder of the selected memory size.
+In order to run the reamining experiments, we need to classify the noisy test data and choose images of each class that are correctly classified. The files ``noised_classif.py`` and ``choose.py`` accomplished these tasks, respectivelty, provided with the selected memory size. The output of ``choose.py`` is ``chosen.csv`` containing the ids of the images shown in the paper, also ``chosen.csv`` must be saved within the ``runs`` folder of the selected memory size.
 
-Experiments 2 through 5 are run with the script ``run_second.sh``, but first the variable ``n`` is assigned to the selected memory domain.
+Experiments 2 through 5 are run with the script ``run_second.sh``, where the variable ``n`` is first set to the selected memory domain. The classification of the retreived images in experiments 2 and 3, and in experiments 4 and 5 is carried out by ``classif.py`` and ``classif_dreams.py``, respectively. Consider the comments in these two files before executing them to appropriately set all variables and comment/uncomment lines of code if necessary.
 
+The classification of the retrieved images is added to ``select_imgs.sh``, which arrange all images and labels in the grids shown in Figs. 8-11 of the paper using the instruction:
+
+```./select_imgs.sh runs-1024/chosen.csv```
+
+The source code also includes:
+* ``parse_history.py`` computes for each domain size the _accuracy_ and _decoder\_root\_mean\_squared\_error_ of the classifier and the autoencoder, respectively, on the testing data.
+*``nnet_stats.py`` computes _accuracy_ of the classifier for each domain size.
+* ``check_chosen.py`` checks the class of the chosen images.
+* ``system_stats.py`` computes the mean value of the precision and the recall for the selected memory with original and noised cues using the sigma values: 0.03, 0.05, 0.07, 0.09 and 0.11.
