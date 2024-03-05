@@ -18,7 +18,7 @@ To clone the Anaconda environment [weam_cifar10.yml](https://github.com/nohernan
 
 The script ``run_first.sh`` trains the autoencoder and classifier, obtains the features of all data and runs experiment 1 of the paper for the memory sizes ``m``: 64, 128, 256, 512 and 1024. The system saves output files in the corresponding ``runs-m`` folder. The file ``mem_params.csv`` with the values of the parameters _iota_, _kappa_, _xi_, and _sigma_ must exists in such ``runs-m`` folders before the execution.
 
-The code in ``mcols_stdev.py`` computes the mean and standard deviation of the precision, the recall and the entropy of the memories for all number of columns and rows according to experiment 1. We analyse the metrics to determine the optimal memory size: 1024x16.
+The code in ``mcols_stdev.py`` computes the mean and standard deviation of the precision, the recall and the entropy of the memories for all number of columns and rows according to experiment 1. We analyse these metrics to determine the optimal memory size: 1024x16.
 
 In order to run the remaining experiments, we classify the test data added with noise and choose random images of each class using the code in ``noised_classif.py`` and ``choose.py``, respectively. The output of ``choose.py`` is ``chosen.csv`` containing the ids of the images shown in the paper. Such ``csv`` file is copied to the ``runs-1024`` folder.
 
