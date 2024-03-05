@@ -16,13 +16,13 @@ To clone the Anaconda environment [weam_cifar10.yml](https://github.com/nohernan
 
 ### Use
 
-The script ``run_first.sh`` trains the autoencoder and classifier, obtains the features of all data and runs experiment 1 of the paper for the memory sizes: 64, 128, 256, 512 and 1024. Each execution saves output files in the corresponding ``runs`` folder; for example, ``runs-1024``, such that ``mem_params.csv`` with the values of the parameters _iota_, _kappa_, _xi_, and _sigma_ exists in each ``runs`` folder before the respective execution.
+The script ``run_first.sh`` trains the autoencoder and classifier, obtains the features of all data and runs experiment 1 of the paper for the memory sizes: 64, 128, 256, 512 and 1024. Each execution saves output files in the corresponding ``runs`` folder; for example, ``runs-1024``, provided that ``mem_params.csv`` with the values of the parameters _iota_, _kappa_, _xi_, and _sigma_ exists in each ``runs`` folder before the respective execution.
 
 The code in ``mcols_stdev.py`` computes the mean and standard deviation of the precision, the recall and the entropy of the memories for all number of columns and rows according to experiment 1. We analyse such values to select the optimal memory size: 1024x16.
 
 In order to run the remaining experiments, we classify the noisy test data and choose random images of each class by running the code in ``noised_classif.py`` and ``choose.py``, respectively. The output of ``choose.py`` is ``chosen.csv`` containing the ids of the images shown in the paper, which must be copied to the ``runs-1024`` folder.
 
-Experiments 2 through 5 are run with the script ``run_second.sh``, where the variable ``n`` is first set to 1024. The classification of the retrieved images in experiments 2 and 3, and in experiments 4 and 5 is carried out by ``classif.py`` and ``classif_dreams.py``, respectively. Consider the comments in these two files before executing them to appropriately set all variables and comment/uncomment lines of code if necessary.
+Experiments 2 through 5 are run with the script ``run_second.sh``, where the variable ``n`` is first set to 1024. Next, the classification of the retrieved images in experiments 2 and 3, and in experiments 4 and 5 is carried out by ``classif.py`` and ``classif_dreams.py``, respectively. Consider the comments in these two files before executing them to appropriately set all variables and comment/uncomment lines of code if necessary.
 
 The classification of the retrieved images is added to ``select_imgs.sh``, which arranges all images and labels in the grids shown in Figs. 8-11 of the paper using the instruction:
 
