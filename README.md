@@ -20,13 +20,15 @@ The script ``run_first.sh`` trains the autoencoder and classifier, obtains the f
 
 The code in ``mcols_stdev.py`` computes the mean and standard deviation of the precision, the recall and the entropy of the memories for all number of columns and rows according to experiment 1. We analyse these metrics to determine the optimal memory size: 1024x16.
 
-In order to run the remaining experiments, we classify the test data added with noise and choose random images of each class using the code in ``noised_classif.py`` and ``choose.py``, respectively. The output of ``choose.py`` is ``chosen.csv`` containing the ids of the selected images. Such ``csv`` file is copied to the ``runs-1024`` folder.
+We classify the test data added with noise and choose random images of each class running the code in ``noised_classif.py`` and ``choose.py``, respectively. The output of ``choose.py`` is ``chosen.csv`` containing the ids of the selected images. The ``chosen.csv`` file is copied to the ``runs-1024`` folder.
 
-Experiments 2 through 5 are run with the script ``run_second.sh``, where the variable ``n`` is first set to 1024. Next, the classification of the retrieved images in experiments 2 and 3, and in experiments 4 and 5 is carried out by ``classif.py`` and ``classif_dreams.py``, respectively. Consider the comments in these two files before executing them to appropriately set all variables and comment/uncomment lines of code if necessary.
+Experiments 2 through 5 are run with the script ``run_second.sh``, where the variable ``n`` is first set to 1024. Next, the classification of the retrieved images in experiments 2 and 3, and in experiments 4 and 5 is carried out by ``classif.py`` and ``classif_dreams.py``, respectively. 
 
-The script ``select_imgs.sh`` takes the classification of the retrieved objects, and arranges all images and labels in the grids shown in Figs. 8-11 of the paper with the instruction:
+The script ``select_imgs.sh`` arranges all retrieved images and their classes in the grids shown in Figs. 8-11 of the paper. The script is run as:
 
 ```./select_imgs.sh runs-1024/chosen.csv```
+
+Consider the comments in all previous files before executing them to appropriately set all variables and comment/uncomment lines of code if necessary.
 
 The source code also includes:
 * ``associative.py`` implements AMRs and memory operations.
