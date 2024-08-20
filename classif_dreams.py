@@ -30,7 +30,7 @@ fname = constants.csv_filename(
 
 chosen = np.genfromtxt(fname, dtype=int, delimiter=',')
 msize = 16
-sigma_index = 0
+sigma_index = 1
 n_depths = constants.dreaming_cycles
 
 #
