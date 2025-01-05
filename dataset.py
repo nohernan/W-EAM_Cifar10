@@ -41,7 +41,7 @@ def _get_segment(segment, fold, noised = False, partial = False):
     training = int(total*constants.nn_training_percent)
     filling = int(total*constants.am_filling_percent)
     testing = int(total*constants.am_testing_percent)
-    step = total / 10#constants.n_folds
+    step = total / constants.n_folds
     i = int(fold * step)
     j = (i + training) % total
     k = (j + filling)  % total
