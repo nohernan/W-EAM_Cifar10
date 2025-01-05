@@ -41,7 +41,7 @@ def _get_segment(segment, fold, noised = False, partial = False):
     training = int(total*constants.nn_training_percent)
     filling = int(total*constants.am_filling_percent)
     testing = int(total*constants.am_testing_percent)
-    step = total / constants.n_folds
+    step = total / 10#constants.n_folds
     i = int(fold * step)
     j = (i + training) % total
     k = (j + filling)  % total
@@ -91,9 +91,16 @@ def _load_dataset(noised, partial):
 
         lower_patch_val=(columns-sq_patch_size)//2
         higher_patch_val=columns-lower_patch_val
-        mask = np.ones(data.shape, dtype=int)
-        mask[:,lower_patch_val:higher_patch_val,lower_patch_val:higher_patch_val,:]=0
+        # ===> Black patch
+        mask = np.ones(data.shape, dtype="float32")
+        mask[:,lower_patch_val:higher_patch_val,lower_patch_val:higher_patch_val,:]=0.
         partial_data = data*mask
+        # ===> Pink/turquoise patch
+        # partial_data = np.copy(data)
+        # for i in range(sq_patch_size):
+        #     diag = lower_patch_val+i
+        #     partial_data[:,diag:higher_patch_val,diag,:] = np.array([245.,0.,135.])/255.
+        #     partial_data[:,lower_patch_val:diag,diag,:] = np.array([8.,232.,222.])/255.
     
     return data, noised_data, partial_data, labels
 
