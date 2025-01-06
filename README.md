@@ -2,7 +2,7 @@
 
 This repository contains the procedures to replicate the experiments presented in the paper:
 
-&nbsp;&nbsp;&nbsp;Noé Hernández, Rafael Morales & Luis A. Pineda (under review). _Remembering CIFAR-10 images with the entropic associative memory_.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Noé Hernández, Rafael Morales & Luis A. Pineda (under review). _Remembering CIFAR-10 images with the entropic associative memory_.
 
 The retrieved images are available in the folder [runs-1024/images/chosen-images-grid](https://github.com/nohernan/W-EAM_Cifar10/blob/main/runs-1024/images/chosen-images-grid)
 
@@ -12,11 +12,11 @@ The code was written in Python 3, using the Anaconda Distribution, and was run o
 * OS: Ubuntu 16.04 Xenial
 * RAM: 64GB
 
-To clone the Anaconda environment [weam_cifar10.yml](https://github.com/nohernan/W-EAM_Cifar10/blob/main/weam_cifar10.yml) used in the the experiments follow the instruction ``$ conda env create -f weam_cifar10.yml``.
+To clone the Anaconda environment [weam_cifar10.yml](https://github.com/nohernan/W-EAM_Cifar10/blob/main/weam_cifar10.yml) used in the experiments follow the instruction ``$ conda env create -f weam_cifar10.yml``.
 
 ### Use
 
-The script ``run_first.sh`` trains the autoencoder and classifier, obtains the features of all data and runs experiment 1 of the paper for the memory sizes ``n``: 64, 128, 256, 512 and 1024. The system saves output files in the corresponding ``runs-n`` folder. The file ``mem_params.csv`` with the values of the parameters _iota_, _kappa_, _xi_, and _sigma_ must exist in such ``runs-m`` folders before the execution.
+The script ``run_first.sh`` trains the autoencoder and classifier, obtains the features from all data and runs experiment 1 of the paper for the memory sizes ``n``: 64, 128, 256, 512 and 1024. The system saves output files in the corresponding ``runs-n`` folder. The file ``mem_params.csv`` with the values of the parameters _iota_, _kappa_, _xi_, and _sigma_ must exist in such ``runs-n`` folders before the execution.
 
 The code in ``mcols_stdev.py`` computes the mean and standard deviation of the precision, the recall and the entropy of the memories for all number of columns and rows according to experiment 1. We analyze these metrics to determine the optimal memory size: 1024x16.
 
