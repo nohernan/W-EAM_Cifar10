@@ -29,6 +29,11 @@ from sklearn.utils import shuffle
 import constants
 import dataset
 
+np.random.seed(constants.seed_value)
+tf.random.set_seed(constants.seed_value)  # tf cpu fix seed
+tf.keras.utils.set_random_seed(constants.seed_value)
+tf.config.experimental.enable_op_determinism()
+
 batch_size_ae  = 256
 batch_size_cla = 32
 epochs = 300
@@ -44,27 +49,28 @@ def get_encoder():
     domain = constants.domain
     
     input_img = Input(shape=(img_rows, img_columns, 3))
-    initializer = tf.keras.initializers.GlorotUniform()
+    # initializer = tf.keras.initializers.GlorotUniform()
     x = Conv2D(filters=32, kernel_size=3, padding='same', activation='relu',
-               kernel_initializer=initializer, input_shape=(32,32,3))(input_img) # 32 x 32 x 32
+               kernel_initializer=tf.keras.initializers.GlorotUniform(seed=constants.seed_value),
+               input_shape=(32,32,3))(input_img) # 32 x 32 x 32
     x = Conv2D(filters=16, kernel_size=3, padding='same', activation='relu',
-               kernel_initializer=initializer)(x) # 32 x 32 x 16
+               kernel_initializer=tf.keras.initializers.GlorotUniform(seed=constants.seed_value))(x) # 32 x 32 x 16
     x = Conv2D(filters=8, kernel_size=3, padding='same', activation='relu',
-               kernel_initializer=initializer)(x) # 32 x 32 x 8
+               kernel_initializer=tf.keras.initializers.GlorotUniform(seed=constants.seed_value))(x) # 32 x 32 x 8
     x = Conv2D(filters=4, kernel_size=3, padding='same', activation='relu',
-               kernel_initializer=initializer)(x) # 32 x 32 x 4
+               kernel_initializer=tf.keras.initializers.GlorotUniform(seed=constants.seed_value))(x) # 32 x 32 x 4
     #
     if domain > 256:
         x = MaxPool2D((2,2), padding ='same')(x) # 16 x 16 x 4
         if domain < 1024:
             x = Conv2D(filters=2, kernel_size=3, padding='same', activation='relu',
-                       kernel_initializer=initializer)(x) # 16 x 16 x 2
+                       kernel_initializer=tf.keras.initializers.GlorotUniform(seed=constants.seed_value))(x) # 16 x 16 x 2
         x = Flatten()(x)
     else:
         x = MaxPool2D((2,2), strides=(4,4), padding ='same')(x) # 8 x 8 x 4
         if domain < 256:
             x = Conv2D(filters=2, kernel_size=3, padding='same', activation='relu',
-                       kernel_initializer=initializer)(x) # 8 x 8 x 2
+                       kernel_initializer=tf.keras.initializers.GlorotUniform(seed=constants.seed_value))(x) # 8 x 8 x 2
         x = Flatten()(x)
         if domain < 128:
             x = Dense(domain)(x)
@@ -84,7 +90,7 @@ def get_decoder():
         if domain < 1024:
             y = Reshape((16,16,2))(encoded_input)
             y = Conv2D(filters=4, kernel_size=3, padding='same', activation='relu',
-                       kernel_initializer=initializer)(y) # 16 x 16 x 4
+                       kernel_initializer=tf.keras.initializers.GlorotUniform(seed=constants.seed_value))(y) # 16 x 16 x 4
         else:
             y = Reshape((16,16,4))(encoded_input) # 16 x 16 x 4
         y = UpSampling2D((2,2))(y) # 32 x 32 x 4
@@ -97,18 +103,19 @@ def get_decoder():
                 y = Reshape((8,8,2))(encoded_input) # 8 x 8 x 2
                 
             y = Conv2D(filters=4, kernel_size=3, padding='same', activation='relu',
-                       kernel_initializer=initializer)(y) # 8 x 8 x 4
+                       kernel_initializer=tf.keras.initializers.GlorotUniform(seed=constants.seed_value))(y) # 8 x 8 x 4
         else:
             y = Reshape((8,8,4))(encoded_input) # 8 x 8 x 4
         y = UpSampling2D((4,4))(y) # 32 x 32 x 4
     #
     y = Conv2D(filters=8, kernel_size=3, padding='same', activation='relu',
-               kernel_initializer=initializer)(y) # 32 x 32 x 8
+               kernel_initializer=tf.keras.initializers.GlorotUniform(seed=constants.seed_value))(y) # 32 x 32 x 8
     y = Conv2D(filters=16, kernel_size=3, padding='same', activation='relu',
-               kernel_initializer=initializer)(y) # 32 x 32 x 16
+               kernel_initializer=tf.keras.initializers.GlorotUniform(seed=constants.seed_value))(y) # 32 x 32 x 16
     y = Conv2D(filters=32, kernel_size=3, padding='same', activation='relu',
-               kernel_initializer=initializer)(y) # 32 x 32 x 32
-    y = Conv2D(filters=3, kernel_size=3, activation='sigmoid', padding="same",name='decoded')(y) # 32x32x3
+               kernel_initializer=tf.keras.initializers.GlorotUniform(seed=constants.seed_value))(y) # 32 x 32 x 32
+    y = Conv2D(filters=3, kernel_size=3, activation='sigmoid',
+               kernel_initializer=tf.keras.initializers.GlorotUniform(seed=constants.seed_value), padding="same", name='decoded')(y) # 32x32x3
     return encoded_input, y
 
 ##
@@ -119,21 +126,25 @@ def get_classifier():
     
     encoded_input = Input(shape=(domain, ))
     weight_decay = 5e-4
-    initializer = tf.keras.initializers.GlorotUniform()
+    #initializer = tf.keras.initializers.GlorotUniform()
     ##
     c = Reshape((width//2, width//2, domain//256))(encoded_input) \
         if domain > 256 else Reshape((width//4, width//4, domain//64))(encoded_input)
     ##
-    c = Conv2D(32, kernel_size=3, padding="same", activation='relu', kernel_initializer=initializer, kernel_regularizer=regularizers.l2(weight_decay))(c) # 16 x 16 x 32 | 8 x 8 x 32
+    c = Conv2D(32, kernel_size=3, padding="same", activation='relu',
+               kernel_initializer=tf.keras.initializers.GlorotUniform(seed=constants.seed_value), kernel_regularizer=regularizers.l2(weight_decay))(c) # 16 x 16 x 32 | 8 x 8 x 32
     c = BatchNormalization()(c)
-    c = Conv2D(32, kernel_size=3, padding="same", activation='relu', kernel_initializer=initializer, kernel_regularizer=regularizers.l2(weight_decay))(c) # 16 x 16 x 32 | 8 x 8 x 32
+    c = Conv2D(32, kernel_size=3, padding="same", activation='relu',
+               kernel_initializer=tf.keras.initializers.GlorotUniform(seed=constants.seed_value), kernel_regularizer=regularizers.l2(weight_decay))(c) # 16 x 16 x 32 | 8 x 8 x 32
     c = BatchNormalization()(c)
     c = MaxPool2D(pool_size=(2,2), strides=(1,1), padding="same")(c) # 16 x 16 x 32 | 8 x 8 x 32
     c = Dropout(0.25)(c)
     ##
-    c = Conv2D(64, kernel_size=3, padding="same", activation='relu', kernel_regularizer=regularizers.l2(weight_decay))(c) # 16 x 16 x 64 | 8 x 8 x 64
+    c = Conv2D(64, kernel_size=3, padding="same", activation='relu',
+               kernel_initializer=tf.keras.initializers.GlorotUniform(seed=constants.seed_value), kernel_regularizer=regularizers.l2(weight_decay))(c) # 16 x 16 x 64 | 8 x 8 x 64
     c = BatchNormalization()(c)
-    c = Conv2D(64, kernel_size=3, padding="same", activation='relu', kernel_regularizer=regularizers.l2(weight_decay))(c) # 16 x 16 x 64 | 8 x 8 x 64
+    c = Conv2D(64, kernel_size=3, padding="same", activation='relu',
+               kernel_initializer=tf.keras.initializers.GlorotUniform(seed=constants.seed_value), kernel_regularizer=regularizers.l2(weight_decay))(c) # 16 x 16 x 64 | 8 x 8 x 64
     c = BatchNormalization()(c)
     c = MaxPool2D(pool_size=(2,2), strides=(1,1), padding="same")(c) # 16 x 16 x 64 | 8 x 8 x 64
     c = Dropout(0.25)(c)

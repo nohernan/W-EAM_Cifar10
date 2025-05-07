@@ -20,8 +20,10 @@ import numpy as np
 from operator import itemgetter
 import random
 import time
-
 import constants
+
+random.seed(constants.seed_value)
+np.random.seed(constants.seed_value)
 
 def normpdf(x, mean, sd, scale = 1.0):
     var = float(sd)**2
@@ -53,6 +55,7 @@ class AssociativeMemory(object):
             characteristics. Default: None, in which case
             half the number of characteristics is used.
         """
+        print('Entropic associative memory created!')
         print(f'{{iota: {iota}, kappa: {kappa}, xi: {xi}, sigma: {sigma}}}')
         self._n = n
         self._m = m+1
@@ -241,7 +244,7 @@ class AssociativeMemory(object):
 
     def containment(self, r_io):
         # Returns an AMR with zeros in the cells where r_io is on but
-        # iota_relation is off. Moreover, such AMR has zeros in the
+        # iota_relation is off. Such AMR has zeros in the
         # first row for each undefined value in r_io
 
         # The zeros in imp mean cells on in r_io but off in iota_relation
@@ -253,8 +256,6 @@ class AssociativeMemory(object):
         # the zeros in imp[0]*sum take into account both situations independently
         imp[0] = imp[0] * sum
         return imp
-        # return ~r_io[:self.m, :] | self.iota_relation \
-        #     if np.count_nonzero(r_io[:self.m, :]) == self.n else np.zeros((self.m,self.n),bool)
 
     # Reduces a relation to a function
     def lreduce(self, vector):

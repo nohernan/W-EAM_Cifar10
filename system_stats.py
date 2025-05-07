@@ -3,7 +3,7 @@ import tensorflow as tf
 import constants
 
 ## Set domain
-domain = 256
+domain = 1024
 constants.domain = domain
 msize = 16
 
@@ -17,6 +17,8 @@ filename = constants.csv_filename(prefix)
 parameters = \
              np.genfromtxt(filename, dtype=float, delimiter=',', skip_header=1)
 es = constants.ExperimentSettings(parameters)
+print(es)
+
 sigmas = constants.sigma_values
 n_sigmas = len(sigmas)
 
@@ -101,7 +103,8 @@ for fold in range(constants.n_folds):
         recalls_partial.append(tp/n)
         # Precision
         fn = np.count_nonzero(classif_partial == 10) # No response
-        print(f'Fold {fold} no response {fn}')
+        if sgm == sigmas[0]:
+            print(f'Fold {fold}, number of recognized occluded images: {6000-fn}')
         precisions_partial.append(tp/(n-fn)) if n-fn>0 else precisions_partial.append(0.0)
 
     #
@@ -122,7 +125,7 @@ recall_memories = np.array(sigma_recall_memories)
 avg_precision_memories = np.mean(precision_memories, axis=0)
 avg_recall_memories = np.mean(recall_memories, axis=0)
 #
-print('=====> Results obtained from memories with orginal images <=====')
+print('\n\n=====> Results obtained from memories with orginal images <=====')
 print(f'\t',end='')
 print_row('Sigmas\t\t ',sigmas)
 print(f'\t',end='')
@@ -153,8 +156,8 @@ recall_partial = np.array(sigma_recall_partial)
 avg_precision_partial = np.mean(precision_partial, axis=0)
 avg_recall_partial = np.mean(recall_partial, axis=0)
 #
-print('\n=====> Results obtained from memories with partial images <=====')
-print(f'Precision for all folds and sigma values:\n{precision_partial}\n')
+print('\n=========================================================')
+print(f'Recall of occluded imags for all folds and sigma values:\n{np.round(recall_partial,3)}\n')
 print(f'\t',end='')
 print_row('Sigmas\t\t ',sigmas)
 print(f'\t',end='')

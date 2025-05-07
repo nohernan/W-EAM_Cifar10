@@ -53,6 +53,8 @@ import png
 import sys
 sys.setrecursionlimit(10000)
 
+random.seed(constants.seed_value)
+np.random.seed(constants.seed_value)
 
 # A trick to avoid getting a lot of errors at edition time because of
 # undefined '_' gettext function.
@@ -78,24 +80,26 @@ def plot_pre_graph(pre_mean, rec_mean, ent_mean, pre_std, rec_std,
 
     # One main step less because levels go on sticks, not
     # on intervals.
-    xmax = full_length - main_step + step
+    xmax = full_length - main_step + 0.25
 
     # Gives space to fully show markers in the top.
-    ymax = full_length + 2
+    ymax = full_length
 
     # Replace undefined precision with 1.0.
     pre_mean = np.nan_to_num(pre_mean, copy=False, nan=100.0)
 
-    plt.errorbar(x, pre_mean, fmt='r-o', yerr=pre_std, label=_('Precision'))
-    plt.errorbar(x, rec_mean, fmt='b--s', yerr=rec_std, label=_('Recall'))
+    plt.errorbar(x, pre_mean, fmt='r-o', yerr=pre_std, label=_('Precision'), capthick=2, capsize=3)
+    plt.errorbar(x, rec_mean, fmt='b--s', yerr=rec_std, label=_('Recall'), capthick=2, capsize=3)
     plt.xlim(0, xmax)
     plt.ylim(0, ymax)
     plt.xticks(x, xlabels)
 
     if xtitle is None:
         xtitle = _('Range Quantization Levels')
+        #xtitle = _('Niveles de discretización')
     if ytitle is None:
         ytitle = _('Percentage')
+        #ytitle = _('Porcentaje')
 
     plt.xlabel(xtitle)
     plt.ylabel(ytitle)
@@ -114,8 +118,10 @@ def plot_pre_graph(pre_mean, rec_mean, ent_mean, pre_std, rec_std,
     cbar.set_ticks(x)
     cbar.ax.set_xticklabels(entropy_labels)
     cbar.set_label(_('Entropy'))
+    #cbar.set_label(_('Entropía'))
 
     s = tag + 'graph_prse_MEAN' + _('-english')
+    #s = tag + 'graph_prse_MEAN' + _('-spanish')
     graph_filename = constants.picture_filename(s, es)
     plt.savefig(graph_filename, dpi=600)
 
@@ -172,23 +178,29 @@ def plot_behs_graph(no_response, no_correct, correct, es):
     width = 5       # the width of the bars: can also be len(x) sequence
 
     plt.bar(x, correct, width, label=_('Correct response'))
+    #plt.bar(x, correct, width, label=_('Respuesta correcta seleccionada'))
     cumm = np.array(correct)
     plt.bar(x, no_correct, width, bottom=cumm, label=_('No correct response'))
+    #plt.bar(x, no_correct, width, bottom=cumm, label=_('Respuesta correcta no seleccionada'))
     cumm += np.array(no_correct)
     plt.bar(x, no_response, width, bottom=cumm, label=_('No response'))
+    #plt.bar(x, no_response, width, bottom=cumm, label=_('Sin respuesta'))
 
     plt.xlim(-width, xmax + width)
     plt.ylim(0.0, ymax)
     plt.xticks(x, constants.memory_sizes)
 
     plt.xlabel(_('Range Quantization Levels'))
+    #plt.xlabel(_('Niveles de discretización'))
     plt.ylabel(_('Labels'))
+    #plt.ylabel(_('Etiquetas'))
 
     plt.legend(loc=0)
     plt.grid(axis='y')
 
     graph_filename = constants.picture_filename(
         'graph_behaviours_MEAN' + _('-english'), es)
+    #'graph_behaviours_MEAN' + _('-spanish'), es)
     plt.savefig(graph_filename, dpi=600)
 
 
@@ -615,6 +627,17 @@ def test_memory_fills(domain, mem_sizes, es):
             total_recalls[fold] = recalls
             total_entropies[fold] = entropies
 
+        np.savetxt(constants.csv_filename(
+            'memory_precision' + constants.numeric_suffix('sze', mem_size), es),
+                   np.array(total_precisions), delimiter=',')
+        np.savetxt(constants.csv_filename(
+            'memory_recall' + constants.numeric_suffix('sze', mem_size), es),
+                   np.array(total_recalls), delimiter=',')
+        np.savetxt(constants.csv_filename(
+            'memory_entropy' + constants.numeric_suffix('sze', mem_size), es),
+                   np.array(total_entropies), delimiter=',')
+        
+
         main_avrge_entropies = np.mean(total_entropies, axis=0)
         main_stdev_entropies = np.std(total_entropies, axis=0)
         main_avrge_precisions = np.mean(total_precisions, axis=0)
@@ -652,6 +675,7 @@ def test_memory_fills(domain, mem_sizes, es):
                        100, es, 'recall' +
                        constants.numeric_suffix('sze', mem_size),
                        xlabels=constants.memory_fills, xtitle=_('Percentage of memory corpus'))
+                       #xlabels=constants.memory_fills, xtitle=_('Porcentaje del subconjunto de llenado'))
 
         bf_idx = optimum_indexes(
             main_avrge_precisions, main_avrge_recalls)
@@ -756,14 +780,11 @@ def remember(msize, mfill, es):
             partial_features = np.load(partial_features_filename)
             #
             max_value = maximum((filling_features))
-            # maximum(
-            #     (filling_features, testing_features, noised_features,
-            #      partial_features))
+            #maximum(
+                #(filling_features, testing_features, noised_features)) # partial_features))
             min_value = minimum((filling_features))
             # minimum(
-            #     (filling_features, testing_features, noised_features,
-            #      partial_features))
-            #
+            #     (filling_features, testing_features, noised_features)) # partial_features))
             filling_rounded = msize_features(
                 filling_features, msize, min_value, max_value)
             testing_rounded = msize_features(
@@ -1081,7 +1102,7 @@ def dreaming(msize, mfill, cycles, es):
         min_value = minimum((filling_features))
         # minimum(
         #     (filling_features, testing_features, noised_features))
-
+        
         total = round(len(filling_features)*mfill/100.0)
         filling_features = filling_features[:total]
         testing_features = testing_features[index]
@@ -1163,7 +1184,7 @@ def generate_memories(es):
     for msize, mfill in learned:
         remember(msize, mfill, es)
         decode_memories(msize, es)
-
+    
 
 def dream(es):
     learned = load_learned_params(es)

@@ -16,6 +16,11 @@ import numpy as np
 import constants
 import tensorflow as tf
 
+np.random.seed(constants.seed_value)
+tf.random.set_seed(constants.seed_value)  # tf cpu fix seed
+tf.keras.utils.set_random_seed(constants.seed_value)
+tf.config.experimental.enable_op_determinism()
+
 columns = 32
 rows = 32
 sq_patch_size=22

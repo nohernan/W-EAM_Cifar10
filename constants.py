@@ -15,11 +15,18 @@
 
 import csv
 import os
-os.environ['CUDA_VISIBLE_DEVICES']='1'
+os.environ['CUDA_VISIBLE_DEVICES']=''
+os.environ['TF_DETERMINISTIC_OPS'] = '1'
+os.environ['TF_DISABLE_SEGMENT_REDUCTION_OP_DETERMINISM_EXCEPTIONS'] = '1'
+os.environ['TF_USE_ATOMIC_SEGMENT_REDUCTIONS']='1'
 import re
 from signal import Sigmasks
 import sys
 import numpy as np
+
+seed_value = 18
+os.environ['PYTHONHASHSEED'] = str(seed_value)
+np.random.seed(seed_value)
 
 # Directory where all results are stored.
 run_path = 'runs'
