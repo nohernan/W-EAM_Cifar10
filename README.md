@@ -6,18 +6,19 @@ This repository contains the procedures to replicate the experiments presented i
 
 The retrieved images are available in the folder [runs-1024/images/chosen-images-grid](https://github.com/nohernan/W-EAM_Cifar10/blob/main/runs-1024/images/chosen-images-grid)
 
-The code was written in Python 3, using the Anaconda Distribution, and was run on a Dell PowerEdge R760 server and a Dell Aurora R5 destop computer.
+The code was written in Python 3, using the Anaconda Distribution, and was run on a Dell PowerEdge R760 server and a Dell Aurora R5 desktop computer.
 
 PowerEdge R760 specs:
 * 2 x Intel Xeon Silver 4514Y 2G
 * DDR5-4400 16GB RDIMM, 5600MT/s, Single Rank (8) Total Memory: 128GB
+* Ubuntu 22.04 LTS Jammy
 * 3 x 1.92TB SSD SATA Read Intensive 6Gbps 512 2.5in Hot-plug AG Drive
 
-Aurota R5 specs:
-* CPU: Intel Core i7-6700 at 3.40 GHz
-* GPU: Nvidia GeForce GTX TITAN X
-* OS: Ubuntu 16.04 Xenial
-* RAM: 64GB
+Aurora R5 specs:
+* Intel Core i7-6700 at 3.40 GHz
+* Nvidia GeForce GTX TITAN X
+* Ubuntu 16.04 Xenial
+* Total Memory: 64GB
 
 To clone the Anaconda environment [weam_cifar10.yml](https://github.com/nohernan/W-EAM_Cifar10/blob/main/weam_cifar10.yml) used in the experiments follow the instruction ``$ conda env create -f weam_cifar10.yml``.
 
