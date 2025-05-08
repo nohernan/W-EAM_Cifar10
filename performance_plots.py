@@ -22,10 +22,10 @@ import numpy as np
 import constants
 import matplotlib as mpl
 
-domain_sizes = [64]
+domain_sizes = [64,128,256,512,1024]
 memory_sizes = [16,32,64]
 selected_domain = 1024
-my_tag="revision1__"
+my_tag="revision1_"
 
 def performance_plot(pre_mean, rec_mean, ent_mean, pre_std, rec_std,
                    es, tag='', xlabels=constants.memory_sizes,
