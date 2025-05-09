@@ -6,21 +6,40 @@ This repository contains the procedures to replicate the experiments presented i
 
 The retrieved images are available in the folder [runs-1024/images/chosen-images-grid](https://github.com/nohernan/W-EAM_Cifar10/blob/main/runs-1024/images/chosen-images-grid)
 
-The code was written in Python 3, using the Anaconda Distribution, and was run on a Dell PowerEdge R760 server and a Dell Aurora R5 desktop computer.
+The code was written in Python, using the Anaconda Distribution, and was run on CPU (for reproducibility) in a Dell PowerEdge R760 server and on GPU in a Dell Aurora R5 desktop computer.
 
 PowerEdge R760 specs:
 * 2 x Intel Xeon Silver 4514Y 2G
 * DDR5-4400 16GB RDIMM, 5600MT/s, Single Rank (8) Total Memory: 128GB
-* Ubuntu 22.04 LTS Jammy
 * 3 x 1.92TB SSD SATA Read Intensive 6Gbps 512 2.5in Hot-plug AG Drive
+* Ubuntu 22.04 LTS Jammy
+* The [weam_cpu_cifar10](https://github.com/nohernan/W-EAM_Cifar10/blob/main/weam_cpu_cifar10.yml) conda environment consists of 
+  * Numpy 1.26.4
+  * Tensorflow-gpu 2.10.0
+  * Tensorflow-estimator 2.10.0
+  * Tensorflow-addons 0.23.0
+  * Scikit-learn 1.5.1
+  * Scipy 1.14.0
+  * Seaborn 0.13.2
+  * Matplotlib 3.9.2
 
 Aurora R5 specs:
 * Intel Core i7-6700 at 3.40 GHz
 * Nvidia GeForce GTX TITAN X
-* Ubuntu 16.04 Xenial
 * Total Memory: 64GB
+* Ubuntu 16.04 Xenial
+* The [weam_gpu_cifar10](https://github.com/nohernan/W-EAM_Cifar10/blob/main/weam_gpu_cifar10.yml) conda environment consists of 
+  * Numpy 1.24.2
+  * Tensorflow 2.8.3
+  * Tensorflow-estimator 2.8.0
+  * Tensorflow-addons 0.18.0
+  * Scikit-learn 1.2.1
+  * Scipy 1.10.0
+  * Seaborn 0.12.2
+  * Matplotlib 3.7.0
 
-To clone the Anaconda environment [weam_cifar10.yml](https://github.com/nohernan/W-EAM_Cifar10/blob/main/weam_cifar10.yml) used in the experiments follow the instruction ``$ conda env create -f weam_cifar10.yml``.
+
+To clone the Anaconda environment [weam_cpu_cifar10](https://github.com/nohernan/W-EAM_Cifar10/blob/main/weam_cpu_cifar10.yml) or [weam_gpu_cifar10](https://github.com/nohernan/W-EAM_Cifar10/blob/main/weam_gpu_cifar10.yml) used in the experiments follow the instruction ``$ conda env create -f weam_cpu_cifar10.yml`` or ``$ conda env create -f weam_gpu_cifar10.yml``, respectively.
 
 ### Use
 
@@ -40,7 +59,7 @@ Consider the comments in all previous files before executing them to appropriate
 
 The source code also includes:
 * ``associative.py`` implements AMRs and memory operations.
-* ``constants.py`` defines values for the operation of the system, and functions for file management.
+* ``constants.py`` defines values for the operation of the system, and functions for file management. Set ``os.environ['CUDA_VISIBLE_DEVICES']=''`` to run experiments on CPU and ``os.environ['CUDA_VISIBLE_DEVICES']='0'`` on GPU ``'0'``.
 * ``dataset.py`` obtains and manipulates the images of CIFAR-10 adding noise and inserting patches. It also partitions the dataset into the _training corpus_, _remembered corpus_ and _test corpus_.
 * ``eam.py`` controls the execution of the system as a whole, carries out the experiments described in the paper, performs quantization and its inverse, computes the memory performance and generates the corresponding graphs.
 * ``neural_net.py`` defines and trains the autoencoder and classifier, and extracts features from all data.
@@ -48,3 +67,5 @@ The source code also includes:
 * ``nnet_stats.py`` computes _accuracy_ of the classifier for each domain size.
 * ``check_chosen.py`` checks the class of the chosen images.
 * ``system_stats.py`` computes the mean _precision_ and _recall_ of the selected memory on original, noisy and patched cues using the _sigma_ values: 0.01, 0.03, 0.05, 0.07, 0.09 and 0.11.
+* ``statistical_an.py`` executes ANOVA tests using the results of the 10-fold cross-validation, and finds confidence intervals for the mean precision and recall values.
+* ``performance_plots.py`` generates line graphs and bar charts presented in the paper.
