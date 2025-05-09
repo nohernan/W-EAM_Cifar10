@@ -13,7 +13,8 @@ PowerEdge R760 specs:
 * DDR5-4400 16GB RDIMM, 5600MT/s, Single Rank (8) Total Memory: 128GB
 * 3 x 1.92TB SSD SATA Read Intensive 6Gbps 512 2.5in Hot-plug AG Drive
 * Ubuntu 22.04 LTS Jammy
-* The [weam_cpu_cifar10](https://github.com/nohernan/W-EAM_Cifar10/blob/main/weam_cpu_cifar10.yml) conda environment consists of 
+* The [weam_cpu_cifar10](https://github.com/nohernan/W-EAM_Cifar10/blob/main/weam_cpu_cifar10.yml) conda environment consists of
+  * Python 3.10.14
   * Numpy 1.26.4
   * Tensorflow-gpu 2.10.0
   * Tensorflow-estimator 2.10.0
@@ -28,7 +29,8 @@ Aurora R5 specs:
 * Nvidia GeForce GTX TITAN X
 * Total Memory: 64GB
 * Ubuntu 16.04 Xenial
-* The [weam_gpu_cifar10](https://github.com/nohernan/W-EAM_Cifar10/blob/main/weam_gpu_cifar10.yml) conda environment consists of 
+* The [weam_gpu_cifar10](https://github.com/nohernan/W-EAM_Cifar10/blob/main/weam_gpu_cifar10.yml) conda environment consists of
+  * Python 3.10.9
   * Numpy 1.24.2
   * Tensorflow 2.8.3
   * Tensorflow-estimator 2.8.0
